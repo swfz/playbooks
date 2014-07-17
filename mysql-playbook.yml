@@ -1,0 +1,22 @@
+---
+- hosts: test-servers
+  sudo: yes
+  vars:
+    version: 5.5
+    revision: 38
+    mysql_shared_compat: http://dev.mysql.com/get/Downloads/MySQL-{{ version }}/MySQL-shared-compat-{{ version }}.{{ revision }}-1.rhel5.x86_64.rpm
+    mysql_shared: http://dev.mysql.com/get/Downloads/MySQL-{{ version }}/MySQL-shared-{{ version }}.{{ revision }}-1.rhel5.x86_64.rpm
+    mysql_client: http://dev.mysql.com/get/Downloads/MySQL-{{ version }}/MySQL-client-{{ version }}.{{ revision }}-1.rhel5.x86_64.rpm
+    mysql_devel: http://dev.mysql.com/get/Downloads/MySQL-{{ version }}/MySQL-devel-{{ version }}.{{ revision }}-1.rhel5.x86_64.rpm
+    mysql_server: http://dev.mysql.com/get/Downloads/MySQL-{{ version }}/MySQL-server-{{ version }}.{{ revision }}-1.rhel5.x86_64.rpm
+  tasks:
+    - name: be sure mysql installed
+      action: yum name={{item}} state=installed
+      with_items:
+        - "{{mysql_shared_compat}}"
+        - "{{mysql_shared}}"
+        - "{{mysql_client}}"
+        - "{{mysql_devel}}"
+        - "{{mysql_server}}"
+    - name: echo ip
+      command: echo {{ ansible_eth0.ipv4.address }}
