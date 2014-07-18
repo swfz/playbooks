@@ -1,0 +1,7 @@
+---
+- hosts: test-servers
+  sudo: yes
+  tasks:
+    - name: setup.sh
+      script: /home/vagrant/dotfiles/setup.root.sh
+

@@ -1,0 +1,7 @@
+---
+- hosts: test-servers
+  sudo: yes
+  tasks:
+    - name: be sure fluentd install
+      shell: curl -L http://toolbelt.treasuredata.com/sh/install-redhat.sh | sh
+
