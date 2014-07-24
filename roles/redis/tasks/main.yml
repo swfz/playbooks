@@ -1,0 +1,6 @@
+---
+- get_url: url=http://download.redis.io/releases/{{ version }}.tar.gz dest={{ src }}
+- command: tar xvfz {{ version }}.tar.gz chdir={{ src }} creates={{ src }}/{{ version }}
+- command: make install chdir={{ src }}/{{ version }}
+
+

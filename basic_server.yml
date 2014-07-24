@@ -1,0 +1,9 @@
+---
+- hosts: test-servers
+  sudo: yes
+  roles:
+    #    - role: redis
+    #- role: mysql55
+    - role: fluentd
+
+

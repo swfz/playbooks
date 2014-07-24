@@ -1,0 +1,9 @@
+---
+- name: mysql installed
+  action: yum name={{item}} state=installed
+  with_items:
+    - "{{mysql_shared_compat}}"
+    - "{{mysql_shared}}"
+    - "{{mysql_client}}"
+    - "{{mysql_devel}}"
+    - "{{mysql_server}}"
