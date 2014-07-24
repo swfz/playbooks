@@ -1,0 +1,7 @@
+---
+- name: reporitory install
+  yum: name={{ rpm }} state=installed
+- name: nginx installed
+  yum: name=nginx state=installed
+- name: be sure nginx is running and enabled
+  service: name=nginx state=running enabled=yes
