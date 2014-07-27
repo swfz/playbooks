@@ -1,0 +1,33 @@
+- name: patch install
+  yum: name=patch state=installed
+- name: get tar.gz
+  get_url: url=http://cr.yp.to/daemontools/daemontools-0.76.tar.gz dest={{ src }}
+- name: decompress tar
+  command: tar xpvf daemontools-0.76.tar.gz chdir={{ src }}
+- name: get patch
+  get_url: url=http://qmail.org/moni.csi.hu/pub/glibc-2.3.1/daemontools-0.76.errno.patch dest={{ src }}/admin/{{ version }}
+- name: apply patch
+  shell: patch -s -p1 <./daemontools-0.76.errno.patch chdir={{ src }}/admin/{{ version }}
+- name: compile
+  command: ./package/compile chdir={{ src }}/admin/{{ version }}
+- name: copy
+  shell: install -o root -g root -m 0755 {{ item }} /usr/local/bin chdir={{ src }}/admin/{{ version }}/command
+  with_items:
+    - "-s envdir"
+    - "-s envuidgid"
+    - "-s fghack"
+    - "-s multilog"
+    - "-s pgrphack"
+    - "-s readproctitle"
+    - "-s setlock"
+    - "-s setuidgid"
+    - "-s softlimit"
+    - "-s supervise"
+    - "-s svc"
+    - "-s svok"
+    - "-s svscan"
+    - "-s svstat"
+    - "-s tai64n"
+    - "-s tai64nlocal"
+    - "svscanboot"
+
