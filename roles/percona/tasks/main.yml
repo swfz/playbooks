@@ -1,0 +1,11 @@
+- name: rpm install
+  yum: name=http://www.percona.com/redir/downloads/percona-release/percona-release-0.0-1.x86_64.rpm
+- name: install
+  yum: name={{ item }} state=installed
+  with_items:
+    - Percona-Server-server-{{ version }}
+    - Percona-Server-client-{{ version }}
+    - Percona-Server-shared-compat
+- name: mysql start
+  service: name=mysql state=running enabled=yes
+
