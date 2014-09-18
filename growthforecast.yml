@@ -1,0 +1,63 @@
+---
+- hosts: test-servers
+  sudo: yes
+  vars:
+    gf_user: growthforecast
+    perl_ver: 5.16.3
+    perlbrew_dir: /home/sawafuji.yuya/perl5/perlbrew/bin/
+  tasks:
+    - name: install package
+      yum: name={{item}} state=installed
+      with_items:
+        - gcc
+        - make
+        - patch
+        - pkgconfig
+        - glib2-devel
+        - gettext
+        - libxml2-devel
+        - pango-devel
+        - cairo-devel
+        - git
+        - perl-ExtUtils-MakeMaker
+        - bitmap-console-fonts
+    - name: create growthforecast group
+      group: name={{ gf_user }} state=present
+    - name: create growthforecast user
+      user: name={{ gf_user }} comment="GrowthForeCast" group={{ gf_user }}
+- hosts: test-servers
+  vars:
+    gf_user: growthforecast
+    perl_ver: 5.16.3
+    perlbrew_dir: /home/sawafuji.yuya/perl5/perlbrew/bin/
+    gfc_dir: /home/sawafuji.yuya/growthforecast/
+    home_dir: /home/sawafuji.yuya/
+  remote_user: sawafuji.yuya
+  tasks:
+    - name: perlbrew
+      action: shell curl -L http://install.perlbrew.pl | bash
+    - name: perlbrew bashrc
+      action: shell echo '[[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]] && source "$HOME/perl5/perlbrew/etc/bashrc"' >> $HOME/.bashrc
+    - name: install perl
+      action: shell {{ perlbrew_dir }}perlbrew install {{ perl_ver }} 2>&1
+      register: res
+      ignore_errors: True
+    - debug: msg="{{res}}"
+
+    - name: switch perl
+      action: shell {{ perlbrew_dir }}/perlbrew switch perl-{{ perl_ver }}
+      # when: res.stdout.find('installed') != -1
+
+    - name: isntall cpanm
+      action: shell {{ perlbrew_dir }}/perlbrew install-cpanm creates={{ perlbrew_dir }}/cpanm
+
+    - name: install gfc
+      action: shell cpanm GrowthForecast creates={{ home_dir }}perl5/perlbrew/perls/perl-5.16.3/bin/gorwthforecast.pl
+
+    - name: create directory
+      file: path={{ gfc_dir }}{{ item }} state=directory owner=sawafuji.yuya group={{ gf_user }} mode=755
+      with_items:
+        - data
+        - log
+        - pid
+        - conf
