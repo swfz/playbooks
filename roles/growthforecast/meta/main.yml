@@ -1,0 +1,3 @@
+dependencies:
+  - { role: perlbrew, exec_user: vagrant }
+  - { role: daemontools, service: growthforecast, service_user: vagrant }

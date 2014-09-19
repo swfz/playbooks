@@ -1,0 +1,16 @@
+- name: install package
+  yum: name={{item}} state=installed
+  with_items:
+    - gcc
+    - make
+    - patch
+    - pkgconfig
+    - glib2-devel
+    - gettext
+    - libxml2-devel
+    - pango-devel
+    - cairo-devel
+    - git
+    - perl-ExtUtils-MakeMaker
+    - bitmap-console-fonts
+

@@ -1,0 +1,22 @@
+- include: packages.yml
+- name: install growthforecast
+  shell: "{{ home_dir }}/perl5/perlbrew/bin/cpanm GrowthForecast creates={{ home_dir }}/perl5/perlbrew/perls/perl-{{ perl_ver }}/bin/gorwthforecast.pl"
+  sudo_user: "{{ gf_user }}"
+
+- name: create directory
+  file: path={{ gf_dir }}/{{ item }} state=directory owner={{ gf_user }} group={{ gf_user }} mode=755
+  with_items:
+    - data
+    - log
+    - pid
+    - conf
+  sudo_user: "{{ gf_user }}"
+
+- name: daemontools directory for env
+  file: path={{ home_dir }}/bin state=directory owner={{ gf_user }} group={{ gf_user }} mode=755
+
+- name: daemontools env
+  template: src=env.j2 dest={{ home_dir }}/bin/env owner={{ gf_user }} group={{ gf_user }} mode=0775
+
+- name: daemontools runfile
+  template: src=run.j2 dest=/var/service/growthforecast/run owner={{ gf_user }} group={{ gf_user }} mode=0775

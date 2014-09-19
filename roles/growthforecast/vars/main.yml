@@ -1,0 +1,7 @@
+gf_user: vagrant
+remote_user: "{{ gf_user }}"
+perlbrew_dir: /home/{{ gf_user }}/perl5/perlbrew/bin
+gf_dir: /home/{{ gf_user }}/growthforecast
+perl_ver: "5.16.3"
+home_dir: /home/{{ gf_user }}
+

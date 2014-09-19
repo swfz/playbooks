@@ -1,0 +1,23 @@
+- name: install perlbrew
+  action: shell curl -L http://install.perlbrew.pl | bash
+  sudo_user: "{{ exec_user }}"
+
+- name: bashrc for perlbrew
+  action: shell echo '[[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]] && source "$HOME/perl5/perlbrew/etc/bashrc"' >> $HOME/.bashrc
+  sudo_user: "{{ exec_user }}"
+
+- name: install perl {{ perl_ver }}
+  shell: "{{ perlbrew_dir }}/perlbrew install perl-{{ perl_ver }} 2>&1"
+  register: res
+  ignore_errors: True
+  sudo_user: "{{ exec_user }}"
+- debug: msg="{{res}}"
+
+- name: switch perl version {{ perl_ver }}
+  shell: "{{ perlbrew_dir }}/perlbrew switch perl-{{ perl_ver }}"
+  when: res.stdout.find('installed') != -1
+  sudo_user: "{{ exec_user }}"
+
+- name: isntall cpanm
+  action: shell {{ perlbrew_dir }}/perlbrew install-cpanm creates={{ perlbrew_dir }}/cpanm
+  sudo_user: "{{ exec_user }}"

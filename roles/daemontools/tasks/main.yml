@@ -30,4 +30,27 @@
     - "-s tai64n"
     - "-s tai64nlocal"
     - "svscanboot"
+- name: replace svscanboot command
+  shell: sed -i -e "s/\/command/\/usr\/local\/bin/g" /usr/local/bin/svscanboot
+
+- name: replace svscanboot service
+  shell: sed -i -e "s/\/service/\/var\/service/g" /usr/local/bin/svscanboot
+
+- name: make directory
+  file: path=/var/supervise state=directory owner=root group=root mode=755
+
+- name: inittab
+  template: src=svscan.j2 dest=/etc/init/svscan.conf owner=root group=root mode=0644
+
+- name: reload config
+  shell: initctl reload-configuration
+
+- name: start svscan
+  shell: initctl start svscan
+
+- name: service directory
+  file: path=/var/service state=directory owner=root group=root mode=755
+
+- name: service directory
+  file: path=/var/service/{{ service }} state=directory owner={{ service_user }} group={{ service_user }} mode=2755
 

@@ -1,0 +1,3 @@
+home_dir: "/home/{{ exec_user }}"
+perlbrew_dir: "{{ home_dir }}/perl5/perlbrew/bin"
+perl_ver: "5.16.3"

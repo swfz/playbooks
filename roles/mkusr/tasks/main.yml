@@ -1,0 +1,6 @@
+- name: create {{ name }} group
+  group: name={{ name }} state=present
+- name: create {{ name }} user
+  user: name={{ name }} comment="{{ name }} Created." group={{ name }}
+
+
