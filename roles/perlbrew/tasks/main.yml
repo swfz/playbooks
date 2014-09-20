@@ -6,15 +6,15 @@
   action: shell echo '[[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]] && source "$HOME/perl5/perlbrew/etc/bashrc"' >> $HOME/.bashrc
   sudo_user: "{{ exec_user }}"
 
-- name: install perl {{ perl_ver }}
-  shell: "{{ perlbrew_dir }}/perlbrew install perl-{{ perl_ver }} 2>&1"
+- name: install perl {{ version }}
+  shell: "{{ perlbrew_dir }}/perlbrew install perl-{{ version }} 2>&1"
   register: res
   ignore_errors: True
   sudo_user: "{{ exec_user }}"
 - debug: msg="{{res}}"
 
-- name: switch perl version {{ perl_ver }}
-  shell: "{{ perlbrew_dir }}/perlbrew switch perl-{{ perl_ver }}"
+- name: switch perl version {{ version }}
+  shell: "{{ perlbrew_dir }}/perlbrew switch perl-{{ version }}"
   when: res.stdout.find('installed') != -1
   sudo_user: "{{ exec_user }}"
 

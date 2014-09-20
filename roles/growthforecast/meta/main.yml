@@ -1,3 +1,3 @@
 dependencies:
-  - { role: perlbrew, exec_user: vagrant }
-  - { role: daemontools, service: growthforecast, service_user: vagrant }
+  - { role: perlbrew, exec_user: "{{ gf_user }}", version: "{{ perl_ver }}"}
+  - { role: daemontools, service: growthforecast, service_user: "{{ gf_user }}" }
