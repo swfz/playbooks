@@ -1,0 +1,19 @@
+---
+- hosts: test-servers
+  sudo: yes
+  vars:
+    users:
+      - { name: "" , key: ""}
+  tasks:
+# password for hash
+  - name: create {{ item.name }} user
+    user: name={{ item.name }} comment="{{ item.name }} Created." group=users password=$1$SomeSalt$password_for_hash createhome=yes state=present
+    with_items: users
+  - name: directory
+    file: path=/home/{{ item.name }}/.ssh state=directory owner={{ item.name }} group=users mode=700
+    with_items: users
+  - name: authorized_keys
+    authorized_key: user={{ item.name }} key="{{ item.key }}"
+    with_items: users
+
+
