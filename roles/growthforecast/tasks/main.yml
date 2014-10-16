@@ -20,3 +20,8 @@
 
 - name: daemontools runfile
   template: src=run.j2 dest=/var/service/growthforecast/run owner={{ gf_user }} group={{ gf_user }} mode=0775
+  register: runfile
+
+- name: restart
+  shell: /usr/local/bin/svc -d /var/service/growthforecast && /usr/local/bin/svc -u /var/service/growthforecast
+  when: runfile.changed

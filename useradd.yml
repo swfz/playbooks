@@ -3,11 +3,10 @@
   sudo: yes
   vars:
     users:
-      - { name: "" , key: ""}
+      - { name: "", pass: "", key: ""}
   tasks:
-# password for hash
   - name: create {{ item.name }} user
-    user: name={{ item.name }} comment="{{ item.name }} Created." group=users password=$1$SomeSalt$password_for_hash createhome=yes state=present
+    user: name={{ item.name }} comment="{{ item.name }} Created." group=luxon password={{ item.pass }} createhome=yes state=present
     with_items: users
   - name: directory
     file: path=/home/{{ item.name }}/.ssh state=directory owner={{ item.name }} group=users mode=700
@@ -16,4 +15,6 @@
     authorized_key: user={{ item.name }} key="{{ item.key }}"
     with_items: users
 
+# create password oneliner. please paste users.pass.
+# python -c 'import crypt; print crypt.crypt("hogehoge", "$1$SomeSalt$")'
 

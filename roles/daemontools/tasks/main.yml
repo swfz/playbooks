@@ -53,5 +53,6 @@
 
 - name: start svscan
   shell: initctl start svscan
+  ignore_errors: True
 
 
