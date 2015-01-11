@@ -1,0 +1,43 @@
+---
+- hosts: web
+  sudo: yes
+  vars:
+    src: /tmp
+    openjdk: java-1.8.0-openjdk
+    version: 1.7
+    revision: 4321
+    filename: jobscheduler_linux-x64.{{version}}.{{revision}}.tar.gz
+    file_url: http://download.sos-berlin.com/JobScheduler.1.7/jobscheduler_linux-x64.{{version}}.{{revision}}.tar.gz
+    db_user: scheduler
+    db_schema: scheduler
+    db_pass:
+    exec_user: vagrant
+    install_dir: /usr/local/jobscheduler
+    user_dir: /home/{{exec_user}}/jobscheduler
+
+  tasks:
+    - name: install MySQL-python
+      yum: name=MySQL-python state=installed
+    - name: create mysql user
+      mysql_user:
+        name={{db_user}}
+        password={{db_pass}}
+        host=localhost
+        priv={{db_schema}}.*:"ALL"
+    - name: install jdk
+      yum: name={{openjdk}} state=installed
+    - name: get tar.gz
+      get_url: url={{file_url}} dest={{src}}
+    - name: decompress tar.tz
+      command: tar xvzf {{filename}} chdir={{src}}
+    - name: settings
+      shell: sed -i -e "s/installpath></installpath>{{install_dir}}</" jobscheduler_install.xml
+      shell: sed -i -e "s/userpathpanelelement></userpathpanelelement>{{user_dir}}</" jobscheduler_install.xml
+      shell: sed -i -e "s/localhost/0.0.0.0/" jobscheduler_install.xml
+      shell: sed -i -e "s/127.0.0.1/localhost/" jobscheduler_install.xml
+      shell: sed -i -e "s/databasePort\" value=\"\"/databasePort\" value=\"3306\"/"
+    - name: exec
+      remote_user: vagrant
+      shell: ./setup.sh jobscheduler_install.xml
+
+
