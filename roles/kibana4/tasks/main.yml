@@ -1,0 +1,6 @@
+- name: get tar.gz
+  get_url: url={{ tar_gz }} dest={{ src }}
+- name: decompress tar.gz
+  command: tar xvzf {{ version }}.tar.gz --remove-files  chdir={{ src }}
+- name: run
+  command: "{{ src }}/{{ version }}/bin/kibana &"

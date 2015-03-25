@@ -1,6 +1,6 @@
 - name: openjdk
   yum: name={{ openjdk }} state=installed
 - name: elasticsearch
-  yum: name={{ rpm }} state=installed
+  yum: name={{ rpm }} state=present
 - name: elasticsearch start
   service: name=elasticsearch state=running enabled=yes
