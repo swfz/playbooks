@@ -1,3 +1,4 @@
 src: /usr/local/bin
 version: kibana-4.0.1-linux-x64
 tar_gz: https://download.elasticsearch.org/kibana/kibana/{{ version }}.tar.gz
+kibana_supervisor_program_name: kibana4
