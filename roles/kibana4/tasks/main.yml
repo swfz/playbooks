@@ -10,7 +10,12 @@
   when: binfile.stat.md5 is not defined
   command: tar xvzf {{ version }}.tar.gz --remove-files  chdir={{ src }}
 
-- name: set config
+- name: set kibana config
+  replace: dest={{ src }}/{{ version }}/config/kibana.yml regexp='http://.*:9200' replace="http://{{ kibana_elasticsearch_ip }}:9200" backup=yes
+  register: config_replace
+  notify: reload supervisor
+
+- name: set supervisor config
   ini_file: dest=/etc/supervisord.conf
             section=program:{{ kibana_supervisor_program_name }}
             option={{ item.option }}
