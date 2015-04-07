@@ -12,28 +12,13 @@
 
 - name: set kibana config
   replace: dest={{ src }}/{{ version }}/config/kibana.yml regexp='http://.*:9200' replace="http://{{ kibana_elasticsearch_ip }}:9200" backup=yes
-  register: config_replace
   notify: reload supervisor
 
 - name: set supervisor config
   ini_file: dest=/etc/supervisord.conf
-            section=program:{{ kibana_supervisor_program_name }}
+            section=program:{{ item.program }}
             option={{ item.option }}
             value={{ item.value }}
-  with_items:
-    - option: command
-      value: "{{ src }}/{{ version }}/bin/kibana"
-    - option: autostart
-      value: true
-    - option: autorestart
-      value: true
-    - option: stopsignal
-      value: QUIT
-    - option: log_stdout
-      value: true
-    - option: log_stderr
-      value: true
-    - option: logfile
-      value: /var/log/supervisor/kibana.log
+  with_items: supervisor_config
   notify: reload supervisor
 
