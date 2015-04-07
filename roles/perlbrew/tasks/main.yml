@@ -1,8 +1,20 @@
+- name: exist perlbrew
+  stat: path=~/perl5/perlbrew/bin/perlbrew
+  register: exist_perlbrew
+  sudo_user: "{{ exec_user }}"
+
 - name: install perlbrew
+  when: exist_perlbrew.stat.md5 is not defined
   action: shell curl -L http://install.perlbrew.pl | bash
   sudo_user: "{{ exec_user }}"
 
+- name: exist perlbrew setting
+  shell: grep '[[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]] && source "$HOME/perl5/perlbrew/etc/bashrc"' $HOME/.bashrc | wc -l
+  sudo_user: "{{ exec_user }}"
+  register: exist_perlbrew_setting
+
 - name: bashrc for perlbrew
+  when: exist_perlbrew_setting.stdout == "0"
   action: shell echo '[[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]] && source "$HOME/perl5/perlbrew/etc/bashrc"' >> $HOME/.bashrc
   sudo_user: "{{ exec_user }}"
 

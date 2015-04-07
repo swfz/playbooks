@@ -1,0 +1,7 @@
+#!/bin/sh
+
+exec 2>&1
+
+exec  \
+  {{ sampleapp_directory }}/env \
+    start_server --interval 10 --port {{ sample_perlapp_port }} --signal-on-hup=QUIT -- starman --pid={{ sampleapp_directory }}/sample_perlapp.pid --worker 5 app.psgi

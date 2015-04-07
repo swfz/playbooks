@@ -1,0 +1,23 @@
+sampleapp_directory: /var/www/sampleperl
+sampleapp_user: vagrant
+perl_ver: 5.20.1
+home_dir: /home/{{ sampleapp_user }}
+sample_perlapp_port: 8080
+sample_perlapp_program_name: sample_perlapp
+supervisor_config:
+  - { program: "{{ sample_perlapp_program_name }}", option: command, value: "{{ sampleapp_directory }}/run" }
+  - { program: "{{ sample_perlapp_program_name }}", option: autostart, value: true }
+  - { program: "{{ sample_perlapp_program_name }}", option: autorestart, value: true }
+  - { program: "{{ sample_perlapp_program_name }}", option: log_stdout, value: true }
+  - { program: "{{ sample_perlapp_program_name }}", option: log_stderr, value: true }
+  - { program: "{{ sample_perlapp_program_name }}", option: stopsignal, value: QUIT }
+  - { program: "{{ sample_perlapp_program_name }}", option: logfile, value: "/var/log/supervisor/{{ sample_perlapp_program_name }}.log"}
+  - { program: "{{ sample_perlapp_program_name }}", option: user, value: "{{ sampleapp_user }}" }
+  - { program: "{{ sample_perlapp_program_name }}", option: startsecs, value: 0 }
+  - { program: "{{ sample_perlapp_program_name }}", option: killasgroup, value: true }
+  - { program: "{{ sample_perlapp_program_name }}", option: stopasgroup, value: true }
+  - { program: "{{ sample_perlapp_program_name }}", option: exitcodes, value: "0,2" }
+  - { program: "{{ sample_perlapp_program_name }}", option: stopwaitsecs, value: 10 }
+
+
+

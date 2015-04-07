@@ -1,0 +1,3 @@
+dependencies:
+  - { role: perlbrew, exec_user: "{{ sampleapp_user }}", version: "{{ perl_ver }}"}
+  - { role: supervisor , supervisor_program: "{{ sample_perlapp_program_name }}", supervisor_user: "{{ sampleapp_user }}" }
