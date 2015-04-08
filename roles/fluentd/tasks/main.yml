@@ -1,4 +1,18 @@
 ---
+- name: install curl-devel
+  yum: name=curl-devel state=installed
+
+- name: exist td-agent
+  stat: path=/etc/init.d/td-agent
+  register: exist_tdagent
+
 - name: be sure fluentd install
+  when: exist_tdagent.stat.md5 is not defined
   shell: curl -L http://toolbelt.treasuredata.com/sh/install-redhat.sh | sh
 
+- name: install plugins
+  shell: /usr/lib64/fluent/ruby/bin/gem install fluent-plugin-{{ item }}
+  with_items: "{{ fluentd_plugins }}"
+
+- name: td-agent start
+  service: name=td-agent state=running

@@ -22,7 +22,7 @@
   sudo_user: "{{ sampleapp_user }}"
 
 - name: exist module Net::Server::SS::PreFork
-  shell: perl -MNet::Server::SS::PreFork2 -e 'print $Net::Server::SS::PreFork2::VERSION'
+  shell: perl -MNet::Server::SS::PreFork -e 'print $Net::Server::SS::PreFork::VERSION'
   ignore_errors: True
   register: exist_net_server_ss_prefork
   sudo_user: "{{ sampleapp_user }}"
