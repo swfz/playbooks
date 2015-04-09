@@ -17,7 +17,7 @@
   sudo_user: "{{ sampleapp_user }}"
 
 - name: install Server::Starter
-  when: exist_server_starter.stderr.find('t locate') == 6
+  when: exist_server_starter.stderr.find('locate') == 6
   shell: "{{ home_dir }}/perl5/perlbrew/bin/cpanm Server::Starter"
   sudo_user: "{{ sampleapp_user }}"
 

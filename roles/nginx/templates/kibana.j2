@@ -1,0 +1,19 @@
+
+upstream kibana_cluster {
+  server {{ kibana_proxy_ip }}:{{ kibana_proxy_port }};
+}
+server {
+    listen       80 default_server;
+
+    location /kibana {
+        /* rewrite ^/gf/(.+) /$1 break; */
+        /* rewrite ^/gf      / break; */
+        proxy_pass http://kibana_cluster;
+
+        proxy_set_header Host $host/gf;
+        proxy_set_header X-Forwarded-Host $host;
+
+        proxy_redirect http://$host:{{ kibana_proxy_port }}/  /;
+        proxy_redirect https://$host:{{ kibana_proxy_port }}/ https://$host/;
+    }
+}

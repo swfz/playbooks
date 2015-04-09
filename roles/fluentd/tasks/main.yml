@@ -10,6 +10,11 @@
   when: exist_tdagent.stat.md5 is not defined
   shell: curl -L http://toolbelt.treasuredata.com/sh/install-redhat.sh | sh
 
+- name: set config
+  when: fluentd_config is defined
+  template: src={{ fluentd_config }} dest=/etc/td-agent/td-agent.conf owner=root mode=644
+  notify: restart td-agent
+
 - name: install plugins
   shell: /usr/lib64/fluent/ruby/bin/gem install fluent-plugin-{{ item }}
   with_items: "{{ fluentd_plugins }}"
