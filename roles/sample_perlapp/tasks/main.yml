@@ -21,6 +21,17 @@
   shell: "{{ home_dir }}/perl5/perlbrew/bin/cpanm Server::Starter"
   sudo_user: "{{ sampleapp_user }}"
 
+- name: exist module Starman
+  shell: perl -MStarman -e 'print $Starman::VERSION'
+  ignore_errors: True
+  register: exist_starman
+  sudo_user: "{{ sampleapp_user }}"
+
+- name: install Starman
+  when: exist_starman.stderr.find('locate') == 6
+  shell: "{{ home_dir }}/perl5/perlbrew/bin/cpanm Starman"
+  sudo_user: "{{ sampleapp_user }}"
+
 - name: exist module Net::Server::SS::PreFork
   shell: perl -MNet::Server::SS::PreFork -e 'print $Net::Server::SS::PreFork::VERSION'
   ignore_errors: True
