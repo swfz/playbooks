@@ -10,41 +10,20 @@
 - name: set env
   template: src=env.j2 dest={{ sampleapp_directory }}/env owner={{ sampleapp_user }} mode=755
 
-- name: exist module Server::Starter
-  shell: perl -MServer::Starter -e 'print $Server::Starter::VERSION'
+- name: exist perl modules
+  shell: perl -M{{ item }} -e 'print ${{ item }}::VERSION'
   ignore_errors: True
-  register: exist_server_starter
+  register: exist_perlmodule
   sudo_user: "{{ sampleapp_user }}"
+  with_items: perlmodules
 
-- name: install Server::Starter
-  when: exist_server_starter.stderr.find('locate') == 6
-  shell: "{{ home_dir }}/perl5/perlbrew/bin/cpanm Server::Starter"
+- name: install perlmodule
+  when: item.1.stderr.find('locate') == 6
+  shell: "{{ home_dir }}/perl5/perlbrew/bin/cpanm {{ item.0 }}"
   sudo_user: "{{ sampleapp_user }}"
-
-- name: exist module Starman
-  shell: perl -MStarman -e 'print $Starman::VERSION'
-  ignore_errors: True
-  register: exist_starman
-  sudo_user: "{{ sampleapp_user }}"
-
-- name: install Starman
-  when: exist_starman.stderr.find('locate') == 6
-  shell: "{{ home_dir }}/perl5/perlbrew/bin/cpanm Starman"
-  sudo_user: "{{ sampleapp_user }}"
-
-- name: exist module Net::Server::SS::PreFork
-  shell: perl -MNet::Server::SS::PreFork -e 'print $Net::Server::SS::PreFork::VERSION'
-  ignore_errors: True
-  register: exist_net_server_ss_prefork
-  sudo_user: "{{ sampleapp_user }}"
-
-- name: debug
-  debug: var=exist_net_server_ss_prefork.stderr.find('locate')
-
-- name: install Net::Server::SS::Prefork
-  when: exist_net_server_ss_prefork.stderr.find('locate') == 6
-  shell: "{{ home_dir }}/perl5/perlbrew/bin/cpanm Net::Server::SS::PreFork"
-  sudo_user: "{{ sampleapp_user }}"
+  with_together:
+    - perlmodules
+    - exist_perlmodule.results
 
 - name: set supervisor config
   ini_file: dest=/etc/supervisord.conf

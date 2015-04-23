@@ -4,6 +4,10 @@ perl_ver: 5.20.1
 home_dir: /home/{{ sampleapp_user }}
 sample_perlapp_port: 8080
 sample_perlapp_program_name: sample_perlapp
+perlmodules:
+  - Server::Starter
+  - Starman
+  - Net::Server::SS::PreFork
 supervisor_config:
   - { program: "{{ sample_perlapp_program_name }}", option: command, value: "{{ sampleapp_directory }}/run" }
   - { program: "{{ sample_perlapp_program_name }}", option: autostart, value: true }
