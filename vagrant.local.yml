@@ -1,0 +1,26 @@
+---
+- hosts: test-servers
+  sudo: yes
+  tasks:
+  - name: set prompt
+    template: src=setup_local_prompt.j2 dest=/etc/profile.d/prompt.sh owner=root mode=0755
+
+  - name: get host
+    script: check_hostname.sh
+    register: hostname
+
+  - name: change host
+    shell: hostname {{ hostname.stdout }}
+
+  - name: replace hosts
+    replace: dest=/etc/hosts regexp='127.0.0.1   localhost' replace='127.0.0.1    {{ hostname.stdout }}' backup=yes
+    notify: restart
+
+  - name: replace sysconfig
+    replace: dest=/etc/sysconfig/network regexp='HOSTNAME=localhost.localdomain' replace='HOSTNAME={{ hostname.stdout }}' backup=yes
+    notify: restart
+
+  handlers:
+  - name: restart
+    shell: /etc/rc.d/init.d/network restart
+
