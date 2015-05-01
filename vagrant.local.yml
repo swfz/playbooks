@@ -3,10 +3,10 @@
   sudo: yes
   tasks:
   - name: set prompt
-    template: src=setup_local_prompt.j2 dest=/etc/profile.d/prompt.sh owner=root mode=0755
+    template: src=util/setup_local_prompt.j2 dest=/etc/profile.d/prompt.sh owner=root mode=0755
 
   - name: get host
-    script: check_hostname.sh
+    script: util/check_hostname.sh
     register: hostname
 
   - name: change host

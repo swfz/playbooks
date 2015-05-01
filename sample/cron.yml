@@ -1,0 +1,9 @@
+---
+- hosts: test-servers
+  tasks:
+    - name: execute perl script
+      cron: name="execute perl script" minute="0" hour="5,2" job="perl script.pl" state=present
+    - name: ls
+      cron: name="ls" minute="0" job="ls -al >/dev/null" state=present
+    # - name: delete ls
+      # cron: name="ls" state=absent

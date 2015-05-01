@@ -1,0 +1,20 @@
+---
+- hosts: test-servers
+  sudo: yes
+  vars:
+    supervisor:
+      test1:
+        command: perl -v
+        autostart: true
+      test2:
+        command: ls -al
+        autostart: true
+  tasks:
+    - name: set ini file
+      ini_file: dest=/home/vagrant/test.ini
+        section=program:{{ item.key }}
+        option={{ item.value.key }}
+        value={{ item.value.value }}
+      with_dict: supervisor
+
+

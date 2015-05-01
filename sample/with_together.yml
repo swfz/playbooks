@@ -1,0 +1,10 @@
+---
+- hosts: test-servers
+  vars:
+    alpha: [ 'a', 'b', 'c' ]
+    numbers: [ 1,2,3 ]
+  tasks:
+    - debug: msg="{{ item.0 }} and {{ item.1 }}"
+      with_together:
+        - alpha
+        - numbers
