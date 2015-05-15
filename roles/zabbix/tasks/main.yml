@@ -1,0 +1,42 @@
+- name: install apache
+  yum: name=httpd state=installed
+
+- name: install mysql python module
+  yum: name=MySQL-python state=present
+
+- name: yum repo
+  yum: name={{ rpm }} state=installed
+
+- name: install
+  yum: name={{ item }} state=installed
+  with_items: pkgs
+
+- name: create database
+  mysql_db: name=zabbix state=present encoding=utf8
+
+- name: create user
+  mysql_user: name='zabbix' priv=zabbix.*:ALL password=zabbix state=present
+
+- name: schema
+  shell: mysql -uroot -A zabbix < {{ item }}
+  with_items: import_sql
+
+- name: start zabbix
+  service: name=zabbix-server state=running enabled=yes
+
+- name: agent start
+  service: name=zabbix-agent state=running enabled=yes
+
+- name: timezone in php
+  ini_file: dest=/etc/php.ini section=Date option=date.timezone value="Asia/Tokyo"
+
+- name: httpd start
+  service: name=httpd state=running
+
+#TODO
+# check schema before execute schema.sql to idempotence
+# how get version
+
+# check running
+# zabbix_get -s 127.0.0.1 -p 10050 -k agent.version
+
