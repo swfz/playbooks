@@ -5,11 +5,11 @@
   yum: name=MySQL-python state=present
 
 - name: yum repo
-  yum: name={{ rpm }} state=installed
+  yum: name={{ zabbix_rpm }} state=installed
 
 - name: install
   yum: name={{ item }} state=installed
-  with_items: pkgs
+  with_items: zabbix_pkgs
 
 - name: create database
   mysql_db: name=zabbix state=present encoding=utf8
@@ -19,7 +19,7 @@
 
 - name: schema
   shell: mysql -uroot -A zabbix < {{ item }}
-  with_items: import_sql
+  with_items: zabbix_import_sql
 
 - name: start zabbix
   service: name=zabbix-server state=running enabled=yes
