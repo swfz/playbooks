@@ -1,0 +1,5 @@
+- name: install git
+  yum: name=git state=installed
+
+- name: config
+  template: src=config.j2 dest=~/.gitconfig owner{{ git.username }} mode=644

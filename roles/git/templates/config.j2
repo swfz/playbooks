@@ -1,0 +1,11 @@
+[user]
+    name = {{ git.username }}
+    email = {{ git.usermail }}
+[color]
+    ui = true
+[core]
+    editor = {{ git_coreeditor|default('vi') }}
+[url "https://"]
+    insteadOf = git://
+[http]
+    sslVerify = false

@@ -1,0 +1,39 @@
+- name: exist plenv
+  stat: path=~/.plenv/bin/plenv
+  register: exist_plenv
+  sudo_user: "{{ plenv.user }}"
+  changed_when: false
+
+- name: install plenv
+  when: exist_plenv.stat.md5 is not defined
+  git: repo=http://github.com/tokuhirom/plenv.git dest=~/.plenv clone=yes
+  sudo_user: "{{ plenv.user }}"
+
+- name: install perl build
+  when: exist_plenv.stat.md5 is not defined
+  git: repo=http://github.com/tokuhirom/Perl-Build.git dest=~/.plenv/plugins/perl-build/ clone=yes
+  sudo_user: "{{ plenv.user }}"
+
+- name: exist plenv setting
+  shell: grep 'export PATH="$HOME/.plenv/bin:$PATH"' {{ plenv.shell }} | wc -l
+  register: exist_env
+  changed_when: false
+  sudo_user: "{{ plenv.user }}"
+
+- name: bashrc for plenv
+  when: exist_env.stdout == "0"
+  shell: echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> {{ plenv.shell }}
+  sudo_user: "{{ plenv.user }}"
+
+- name: install perl
+  shell: ~/.plenv/bin/plenv install {{ plenv.version }}
+  sudo_user: "{{ plenv.user }}"
+
+- name: switch perl
+  shell: ~/.plenv/bin/plenv global {{ plenv.version }}
+  sudo_user: "{{ plenv.user }}"
+
+- name: install cpanm
+  shell: ~/.plenv/bin/plenv install-cpanm
+  sudo_user: "{{ plenv.user }}"
+
