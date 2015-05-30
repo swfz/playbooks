@@ -1,2 +1,2 @@
 dependencies:
-  - { role: git }
+  - { role: git, git_user: "{{ plenv.user }}" }

@@ -2,4 +2,6 @@
   yum: name=git state=installed
 
 - name: config
-  template: src=config.j2 dest=~/.gitconfig owner{{ git.username }} mode=644
+  template: src=config.j2 dest=~/.gitconfig owner={{ git.username }} mode=644
+  sudo_user: "{{ git.username }}"
+

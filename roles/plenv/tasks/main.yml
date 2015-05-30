@@ -1,39 +1,70 @@
+- name: install dependencies package
+  yum: name={{ item }} state=installed
+  with_items:
+    - perl-ExtUtils-MakeMaker
+
 - name: exist plenv
-  stat: path=~/.plenv/bin/plenv
+  stat: path={{ plenv.bin }}
   register: exist_plenv
   sudo_user: "{{ plenv.user }}"
   changed_when: false
 
 - name: install plenv
-  when: exist_plenv.stat.md5 is not defined
-  git: repo=http://github.com/tokuhirom/plenv.git dest=~/.plenv clone=yes
+  when: exist_plenv.stat.exists == false
+  git: repo={{ plenv.url }} dest=~/.plenv clone=yes
   sudo_user: "{{ plenv.user }}"
+
+- name: exist perl build
+  stat: path={{ perl_build.path }}
+  register: exist_perl_build
+  sudo_user: "{{ plenv.user }}"
+  changed_when: false
 
 - name: install perl build
-  when: exist_plenv.stat.md5 is not defined
-  git: repo=http://github.com/tokuhirom/Perl-Build.git dest=~/.plenv/plugins/perl-build/ clone=yes
+  when: exist_plenv.stat.exists == false
+  git: repo={{ perl_build.url }} dest={{ perl_build.path }} clone=yes
   sudo_user: "{{ plenv.user }}"
 
-- name: exist plenv setting
-  shell: grep 'export PATH="$HOME/.plenv/bin:$PATH"' {{ plenv.shell }} | wc -l
-  register: exist_env
+- name: set profile.d
+  template: src=plenv.sh.j2 dest=/etc/profile.d/plenv.sh owner=root mode=644
+
+- name: exist version
+  shell: "{{ plenv.bin }} versions | grep {{ plenv.local }} | wc -l"
+  register: exist_version
+  sudo_user: "{{ plenv.user }}"
   changed_when: false
-  sudo_user: "{{ plenv.user }}"
-
-- name: bashrc for plenv
-  when: exist_env.stdout == "0"
-  shell: echo 'export PATH="$HOME/.plenv/bin:$PATH"' >> {{ plenv.shell }}
-  sudo_user: "{{ plenv.user }}"
 
 - name: install perl
-  shell: ~/.plenv/bin/plenv install {{ plenv.version }}
+  when: exist_version.stdout == "0"
+  shell: "{{ plenv.bin }} install {{ plenv.local }}"
   sudo_user: "{{ plenv.user }}"
 
-- name: switch perl
-  shell: ~/.plenv/bin/plenv global {{ plenv.version }}
+- name: "check {{ item }} version"
+  shell: "{{ plenv.bin }} {{ item }} | grep {{ plenv[item] }} | wc -l"
+  register: check_version
   sudo_user: "{{ plenv.user }}"
+  changed_when: false
+  with_items:
+    - global
+    - local
+- debug: var=check_version
+
+- name: "set {{ item.1 }} perl"
+  when: item.0.stdout != "1"
+  shell: "{{ plenv.bin }} {{ item.1 }} {{ plenv[item.1] }}"
+  sudo_user: "{{ plenv.user }}"
+  with_together:
+    - check_version.results
+    - [ global, local ]
+
+- name: exist cpanm
+  stat: path=~/.plenv/versions/{{ plenv.local }}/bin/cpanm
+  register: exist_cpanm
+  sudo_user: "{{ plenv.user }}"
+  changed_when: false
 
 - name: install cpanm
-  shell: ~/.plenv/bin/plenv install-cpanm
+  when: exist_cpanm.stat.exists == false
+  shell: "{{ plenv.bin }} install-cpanm"
   sudo_user: "{{ plenv.user }}"
 

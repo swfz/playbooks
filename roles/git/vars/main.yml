@@ -1,3 +1,4 @@
+git_user: vagrant
 git:
-  username: vagrant
+  username: "{{ git_user | default('vagrant') }}"
   usermail: vagrant@example.com
