@@ -47,7 +47,6 @@
   with_items:
     - global
     - local
-- debug: var=check_version
 
 - name: "set {{ item.1 }} perl"
   when: item.0.stdout != "1"
