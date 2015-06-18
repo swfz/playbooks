@@ -1,0 +1,10 @@
+cassandra_version: 2.1.6
+cassandra_archive: apache-cassandra-{{ cassandra_version }}-bin.tar.gz
+
+cassandra:
+  openjdk: java-1.8.0-openjdk
+  src: /tmp
+  tar_gz: https://archive.apache.org/dist/cassandra/{{ cassandra_version }}/{{ cassandra_archive }}
+  env:
+    - 'export JAVA_HOME=/usr/java/default'
+    - 'export PATH=\$PATH:/usr/local/cassandra/bin'

@@ -1,0 +1,36 @@
+- name: install openjdk
+  yum: name={{ cassandra.openjdk }} state=installed
+
+- name: check env in /etc/profile
+  shell: grep '{{ item }}' /etc/profile | wc -l
+  register: exists_env
+  with_items: cassandra.env
+  changed_when: false
+
+- name: set env to /etc/profile
+  when: item.1.stdout == '0'
+  shell: echo {{ item.0 }} >> /etc/profile
+  with_together:
+    - cassandra.env
+    - exists_env.results
+
+- name: exist cassandra
+  stat: path=/usr/local/cassandra/bin/cassandra
+  register: exist_cassandra
+  changed_when: false
+
+- name: get source
+  when: exist_cassandra.stat.exists == false
+  get_url: url={{ cassandra.tar_gz }} dest={{ cassandra.src }}
+
+- name: extract cassandra
+  when: exist_cassandra.stat.exists == false
+  command: tar zxvf {{ cassandra_archive }} chdir={{ cassandra.src }}
+
+- name: move cassandra
+  when: exist_cassandra.stat.exists == false
+  command: mv {{ cassandra.src }}/apache-cassandra-{{ cassandra_version }} /usr/local/cassandra
+
+- name: start cassandra
+  command: /usr/local/cassandra/bin/cassandra
+
