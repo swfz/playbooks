@@ -1,0 +1,16 @@
+---
+- name: check rundeck repo
+  shell: rpm -qi rundeck-repo
+  register: exist_rundeck_repo
+  ignore_errors: yes
+  changed_when: false
+
+- name: install rundeck rpm
+  when: exist_rundeck_repo.rc == '1'
+  shell: rpm -Uvh "{{ rundeck.rpm }}"
+
+- name: install rundeck
+  yum: name=rundeck state=installed
+
+- name: start rundeck
+  service: name=rundeckd state=running
