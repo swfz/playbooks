@@ -1,0 +1,14 @@
+app_user: vagrant
+ruby_build:
+  url: https://github.com/sstephenson/ruby-build.git
+  path: ~/.rbenv/plugins/ruby-build
+
+rbenv_local: jruby-1.7.9
+
+rbenv:
+  bin: ~/.rbenv/bin/rbenv
+  url: https://github.com/sstephenson/rbenv.git
+  user: "{{ app_user | default('vagrant') }}"
+  local: "{{ rbenv_local }}"
+  global: "{{ rbenv_global | default(rbenv_local)}}"
+

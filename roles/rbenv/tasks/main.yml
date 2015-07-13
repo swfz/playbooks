@@ -1,0 +1,70 @@
+# - name: install dependencies package
+#   yum: name={{ item }} state=installed
+#   with_items:
+#     - ruby-ExtUtils-MakeMaker
+#     - patch
+
+- name: exist rbenv
+  stat: path={{ rbenv.bin }}
+  register: exist_rbenv
+  sudo_user: "{{ rbenv.user }}"
+  changed_when: false
+
+- name: install rbenv
+  when: exist_rbenv.stat.exists == false
+  git: repo={{ rbenv.url }} dest=~/.rbenv clone=yes
+  sudo_user: "{{ rbenv.user }}"
+
+- name: exist ruby build
+  stat: path={{ ruby_build.path }}
+  register: exist_ruby_build
+  sudo_user: "{{ rbenv.user }}"
+  changed_when: false
+
+- name: install ruby build
+  when: exist_rbenv.stat.exists == false
+  git: repo={{ ruby_build.url }} dest={{ ruby_build.path }} clone=yes
+  sudo_user: "{{ rbenv.user }}"
+
+- name: set profile.d
+  template: src=rbenv.sh.j2 dest=/etc/profile.d/rbenv.sh owner=root mode=644
+
+- name: exist version
+  shell: "{{ rbenv.bin }} versions | grep {{ rbenv.local }} | wc -l"
+  register: exist_version
+  sudo_user: "{{ rbenv.user }}"
+  changed_when: false
+
+- name: install ruby
+  when: exist_version.stdout == "0"
+  shell: "{{ rbenv.bin }} install {{ rbenv.local }}"
+  sudo_user: "{{ rbenv.user }}"
+
+- name: "check {{ item }} version"
+  shell: "{{ rbenv.bin }} {{ item }} | grep {{ rbenv[item] }} | wc -l"
+  register: check_version
+  sudo_user: "{{ rbenv.user }}"
+  changed_when: false
+  with_items:
+    - global
+    - local
+
+- name: "set {{ item.1 }} ruby"
+  when: item.0.stdout != "1"
+  shell: "{{ rbenv.bin }} {{ item.1 }} {{ rbenv[item.1] }}"
+  sudo_user: "{{ rbenv.user }}"
+  with_together:
+    - check_version.results
+    - [ global, local ]
+
+# - name: exist cpanm
+#   stat: path=~/.rbenv/versions/{{ rbenv.local }}/bin/cpanm
+#   register: exist_cpanm
+#   sudo_user: "{{ rbenv.user }}"
+#   changed_when: false
+#
+# - name: install cpanm
+#   when: exist_cpanm.stat.exists == false
+#   shell: "{{ rbenv.bin }} install-cpanm"
+#   sudo_user: "{{ rbenv.user }}"
+#
