@@ -1,3 +1,0 @@
-dependencies:
-  - { role: supervisor, supervisor_program: "{{ kibana_supervisor_program_name }}", supervisor_user: "{{ kibana_user }}" }
-
