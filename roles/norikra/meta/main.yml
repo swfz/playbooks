@@ -1,0 +1,2 @@
+dependencies:
+  - { role: rbenv, sudo_user: root, app_user: root, rbenv_local: "{{ ruby_ver }}"}

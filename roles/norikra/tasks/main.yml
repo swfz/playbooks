@@ -1,0 +1,11 @@
+- name: install norikra
+  shell: "~/.rbenv/gem norikra"
+- name: directory
+  file: path={{ item }} state=directory owner=root group=norikra mode755
+  with_items:
+    - "/var/log/norikra"
+    - "/etc/norikra"
+    - "/var/run/norikra"
+
+- name: start norikra
+  shell: norikra start -d -l /var/log/norikra
