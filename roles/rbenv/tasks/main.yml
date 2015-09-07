@@ -1,9 +1,3 @@
-# - name: install dependencies package
-#   yum: name={{ item }} state=installed
-#   with_items:
-#     - ruby-ExtUtils-MakeMaker
-#     - patch
-
 - name: exist rbenv
   stat: path={{ rbenv.bin }}
   register: exist_rbenv
@@ -57,14 +51,4 @@
     - check_version.results
     - [ global, local ]
 
-# - name: exist cpanm
-#   stat: path=~/.rbenv/versions/{{ rbenv.local }}/bin/cpanm
-#   register: exist_cpanm
-#   sudo_user: "{{ rbenv.user }}"
-#   changed_when: false
-#
-# - name: install cpanm
-#   when: exist_cpanm.stat.exists == false
-#   shell: "{{ rbenv.bin }} install-cpanm"
-#   sudo_user: "{{ rbenv.user }}"
-#
+
