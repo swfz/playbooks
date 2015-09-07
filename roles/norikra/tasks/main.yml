@@ -1,12 +1,23 @@
-- name: install norikra
-  shell: "~/.rbenv/gem norikra"
-- name: directory
-  file: path={{ item }} state=directory owner=root group=norikra mode755
+- name: check installed
+  stat: path="~/.rbenv/shims/norikra"
+  register: binfile
+  sudo_user: "{{ norikra.user }}"
+  changed_when: false
+
+- name: install
+  shell: "~/.rbenv/versions/{{ norikra.ruby_version }}/bin/gem install norikra"
+  sudo_user: "{{ norikra.user }}"
+  when: binfile.stat.exists == false
+
+- name: make directory
+  file: path={{ item }} state=directory owner={{ norikra.user }} group={{ norikra.user }} mode=755
   with_items:
     - "/var/log/norikra"
     - "/etc/norikra"
     - "/var/run/norikra"
+  sudo_user: root
 
-- name: start norikra
-  shell: norikra start -d -l /var/log/norikra
+- name: start
+  shell: ~/.rbenv/shims/norikra start -d -l /var/log/norikra
+  sudo_user: "{{ norikra.user }}"
 

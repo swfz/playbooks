@@ -1,0 +1,4 @@
+- name: group add
+  group: name={{ groupname }}
+- name: user add
+  user: name={{ username }} group={{ groupname }}

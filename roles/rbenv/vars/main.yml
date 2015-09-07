@@ -1,14 +1,14 @@
-app_user: vagrant
+# app_user: vagrant
 ruby_build:
   url: https://github.com/sstephenson/ruby-build.git
   path: ~/.rbenv/plugins/ruby-build
 
-rbenv_local: 2.1.2
+# rbenv_local: 2.1.2
 
 rbenv:
   bin: ~/.rbenv/bin/rbenv
   url: https://github.com/sstephenson/rbenv.git
   user: "{{ app_user | default('vagrant') }}"
-  local: "{{ rbenv_local }}"
+  local: "{{ rbenv_local | default('2.1.2')}}"
   global: "{{ rbenv_global | default(rbenv_local)}}"
 

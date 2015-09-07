@@ -1,2 +1,3 @@
 dependencies:
-  - { role: rbenv, sudo_user: root, app_user: root, rbenv_local: "{{ ruby_ver }}"}
+  - { role: user, username: "{{ norikra.user }}", groupname: "{{ norikra.user }}" }
+  - { role: rbenv, sudo_user: "{{ norikra.user }}", app_user: "{{ norikra.user }}", rbenv_local: "{{ norikra.ruby_version }}"}
