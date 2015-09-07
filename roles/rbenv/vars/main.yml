@@ -3,7 +3,7 @@ ruby_build:
   url: https://github.com/sstephenson/ruby-build.git
   path: ~/.rbenv/plugins/ruby-build
 
-rbenv_local: jruby-1.7.9
+rbenv_local: 2.1.2
 
 rbenv:
   bin: ~/.rbenv/bin/rbenv
