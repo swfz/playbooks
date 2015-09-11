@@ -1,0 +1,6 @@
+errbit:
+  ruby:
+    version: 2.1.2
+  user: vagrant
+  url: https://github.com/errbit/errbit
+  home: /var/www/errbt

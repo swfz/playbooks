@@ -1,0 +1,2 @@
+dependencies:
+  - { role: rbenv, exec_user: "{{ errbit.user }}", rbenv_local: "{{ errbit.ruby.version }}"}

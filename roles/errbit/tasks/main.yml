@@ -1,0 +1,26 @@
+- name: install dependencies package
+  yum: name={{ item }} state=installed
+  with_items:
+    - gcc
+    - make
+    - libxml2-devel
+    - libxslt-devel
+    - libcurl-devel
+    - libzip-devel
+    - openssl-devel
+    - readline-devel
+
+- name: make directory
+  file: path={{ errbit.home }} state=directory owner={{ errbit.user }} mode=755
+
+- name: install bundler
+  shell: source ~/.bashrc && ~/.rbenv/shims/gem install bundler chdir=/var/www/errbit
+  sudo_user: "{{ errbit.user }}"
+
+- name: clone repository
+  git: repo={{ errbit.url }} dest={{ errbit.home }} clone=yes
+  sudo_user: "{{ errbit.user }}"
+
+- name: bundle install
+  shell: source ~/.bashrc && rbenv rehash && bundle install --path=vendor/bundle chdir=/var/www/errbit
+  sudo_user: "{{ errbit.user }}"
