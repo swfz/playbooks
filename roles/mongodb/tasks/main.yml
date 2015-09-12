@@ -1,0 +1,14 @@
+- name: add repository
+  template: src=mongodb.repo dest=/etc/yum.repos.d/mongodb-org-3.0.repo
+
+- name: install mongodb
+  yum: name={{ item }} state=installed
+  with_items:
+    - mongodb-org-{{ mongodb.version }}
+    - mongodb-org-server-{{ mongodb.version }}
+    - mongodb-org-shell-{{ mongodb.version }}
+    - mongodb-org-mongos-{{ mongodb.version }}
+    - mongodb-org-tools-{{ mongodb.version }}
+
+- name: start mongodb
+  service: name=mongod state=running
