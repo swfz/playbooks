@@ -6,7 +6,7 @@
   changed_when: false
 
 - name: install rundeck rpm
-  when: exist_rundeck_repo.rc == '1'
+  when: exist_rundeck_repo.stdout.find('is not installed') != -1
   shell: rpm -Uvh "{{ rundeck.rpm }}"
 
 - name: install rundeck
