@@ -7,3 +7,6 @@
     - "{{mysql_client}}"
     - "{{mysql_devel}}"
     - "{{mysql_server}}"
+
+- name: start mysql
+  service: name=mysql state=running

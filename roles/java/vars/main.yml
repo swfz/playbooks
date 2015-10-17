@@ -1,7 +1,7 @@
 src_dir: /usr/local/src
 oracle_java_version: 8
-oracle_java_version_update: 45
-oracle_java_build: 14
+oracle_java_version_update: 60
+oracle_java_build: 27
 oracle_java_home: /usr/java/jdk
 
 oracle_java:
