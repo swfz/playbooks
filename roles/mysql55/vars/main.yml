@@ -1,9 +1,0 @@
----
-version: 5.5
-revision: 46
-mysql_shared_compat: http://dev.mysql.com/get/Downloads/MySQL-{{ version }}/MySQL-shared-compat-{{ version }}.{{ revision }}-1.rhel5.x86_64.rpm
-mysql_shared: http://dev.mysql.com/get/Downloads/MySQL-{{ version }}/MySQL-shared-{{ version }}.{{ revision }}-1.rhel5.x86_64.rpm
-mysql_client: http://dev.mysql.com/get/Downloads/MySQL-{{ version }}/MySQL-client-{{ version }}.{{ revision }}-1.rhel5.x86_64.rpm
-mysql_devel: http://dev.mysql.com/get/Downloads/MySQL-{{ version }}/MySQL-devel-{{ version }}.{{ revision }}-1.rhel5.x86_64.rpm
-mysql_server: http://dev.mysql.com/get/Downloads/MySQL-{{ version }}/MySQL-server-{{ version }}.{{ revision }}-1.rhel5.x86_64.rpm
-
