@@ -1,0 +1,8 @@
+---
+- hosts: test-servers
+  tasks:
+    - name: async
+      command: /bin/sleep 30
+      async: 40
+      poll: 3
+

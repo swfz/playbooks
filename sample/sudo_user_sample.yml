@@ -1,0 +1,14 @@
+---
+- hosts: test
+  sudo: yes
+  tasks:
+    - name: normal
+      shell: id
+      register: result
+    - name: set sudo user
+      shell: id
+      register: result
+      sudo_user: vagrant
+    - name: not set sudo user
+      shell: id
+      register: result

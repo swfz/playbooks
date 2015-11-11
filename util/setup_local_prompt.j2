@@ -24,11 +24,12 @@ _set_ps1 () {
     local BR=$'\e[41m'  # Background Red
     local BG=$'\e[42m'  # Background Green
     local BB=$'\e[44m'  # Background Cyan
+    ipaddr=`/sbin/ifconfig  | grep -Po 'addr:192.168.\d+.\d+' | sed -e 's/addr://g'`
     export MYSQL_PS1="$(hostname -s) -> \u@\h/\d mysql> "
         if [ $UID = 0 ] ; then
-        _PS1="$BB[$Y\u$RS$BB@$Y\h$RS$BB $Y$BB\w$RS$BB] (${Y}{{ ansible_eth1.ipv4.address }}$RS$BB)$RS"
+        _PS1="$BB[$Y\u$RS$BB@$Y\h$RS$BB $Y$BB\w$RS$BB] (${Y} $ipaddr $RS$BB)$RS"
         else
-        _PS1="[$B\u$RS@$B\h$RS $B\w$RS] (${B}{{ ansible_eth1.ipv4.address }}$RS)"
+        _PS1="[$B\u$RS@$B\h$RS $B\w$RS] (${B} $ipaddr $RS)"
         fi
 }
 ps1_set_fullpath
