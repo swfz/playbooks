@@ -1,0 +1,5 @@
+- src: https://github.com/swfz/ansible-role-mysql55.git
+- src: https://github.com/swfz/ansible-role-ojava8.git
+- src: https://github.com/swfz/ansible-role-percona55.git
+- src: https://github.com/swfz/ansible-role-mongodb.git
+- src: https://github.com/swfz/ansible-role-cassandra.git
